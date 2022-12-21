@@ -1,0 +1,7 @@
+node_modules/
+.vscode/
+cert/
+
+package-lock.json
+config.json
+.env

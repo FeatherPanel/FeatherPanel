@@ -1,0 +1,32 @@
+{
+  "name": "featherpanel",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon .",
+    "start": "node index.js"
+  },
+  "author": "Natoune",
+  "license": "MIT",
+  "dependencies": {
+    "colors": "^1.4.0",
+    "cookie-parser": "^1.4.6",
+    "docker-modem": "^3.0.6",
+    "dockerode": "^3.3.4",
+    "dotenv": "^16.0.3",
+    "eiows": "^4.1.2",
+    "ejs": "^3.1.8",
+    "enquirer": "^2.3.6",
+    "express": "^4.18.2",
+    "express-session": "^1.17.3",
+    "inquirer": "^9.1.4",
+    "mysql": "^2.18.1",
+    "socket.io": "^4.5.4",
+    "svelte": "^3.54.0",
+    "xterm": "^5.0.0",
+    "xterm-addon-attach": "^0.7.0",
+    "xterm-addon-fit": "^0.6.0",
+    "xterm-addon-web-links": "^0.7.0"
+  }
+}
