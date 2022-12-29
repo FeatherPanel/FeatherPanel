@@ -241,152 +241,125 @@ if (dockerCheck.stdout.toString().includes('Server')) {
                                 process.exit(1);
                             }
 
-                            connection.query("DROP TABLE IF EXISTS `permissions_user`", function (err) {
+                            connection.query('DROP TABLE IF EXISTS `servers`', function (err) {
                                 if (err) {
                                     console.error(err);
                                     fs.unlinkSync(path.join(__dirname, 'config.json'));
                                     process.exit(1);
                                 }
-
-                                let sql = "CREATE TABLE IF NOT EXISTS `permissions_user` (";
-                                sql += "`user_id` int(11) NOT NULL,";
-                                sql += "`permission_id` int(11) NOT NULL";
-                                sql += "`server_id` varchar(6) NOT NULL";
-                                sql += ") ENGINE=MyISAM DEFAULT CHARSET=latin1";
-
+                                
+                                let sql = "CREATE TABLE IF NOT EXISTS `servers` (";
+                                sql += "`id` varchar(6) NOT NULL,";
+                                sql += "`name` varchar(255) NOT NULL,";
+                                sql += "`host` varchar(255) NOT NULL,";
+                                sql += "`port` int(5) NOT NULL,";
+                                sql += "`container` varchar(255) NOT NULL,";
+                                sql += "`ram` varchar(255) NOT NULL DEFAULT '0B / 0B',";
+                                sql += "`ram_perc` varchar(255) NOT NULL DEFAULT '0%',";
+                                sql += "`disk` varchar(255) NOT NULL DEFAULT '0',";
+                                sql += "`disk_max` varchar(255) NOT NULL DEFAULT '0',";
+                                sql += "`cpu` varchar(255) NOT NULL DEFAULT '0%',";
+                                sql += "`status` varchar(255) NOT NULL DEFAULT 'stopped',";
+                                sql += "`sftp_username` varchar(255) NOT NULL,";
+                                sql += "`sftp_password` varchar(255) NOT NULL";
+                                sql += ") ENGINE=MyISAM DEFAULT CHARSET=latin1"
                                 connection.query(sql, function (err) {
                                     if (err) {
                                         console.error(err);
                                         fs.unlinkSync(path.join(__dirname, 'config.json'));
                                         process.exit(1);
                                     }
-
-
-                                    connection.query('DROP TABLE IF EXISTS `servers`', function (err) {
+                                    
+                                    connection.query('DROP TABLE IF EXISTS `permissions_user`', function (err) {
                                         if (err) {
                                             console.error(err);
                                             fs.unlinkSync(path.join(__dirname, 'config.json'));
                                             process.exit(1);
                                         }
-
-                                        let sql = "CREATE TABLE IF NOT EXISTS `servers` (";
-                                        sql += "`id` varchar(6) NOT NULL,";
-                                        sql += "`name` varchar(255) NOT NULL,";
-                                        sql += "`host` varchar(255) NOT NULL,";
-                                        sql += "`port` int(5) NOT NULL,";
-                                        sql += "`container` varchar(255) NOT NULL,";
-                                        sql += "`ram` varchar(255) NOT NULL DEFAULT '0B / 0B',";
-                                        sql += "`ram_perc` varchar(255) NOT NULL DEFAULT '0%',";
-                                        sql += "`disk` varchar(255) NOT NULL DEFAULT '0',";
-                                        sql += "`disk_max` varchar(255) NOT NULL DEFAULT '0',";
-                                        sql += "`cpu` varchar(255) NOT NULL DEFAULT '0%',";
-                                        sql += "`status` varchar(255) NOT NULL DEFAULT 'stopped',";
-                                        sql += "`sftp_username` varchar(255) NOT NULL,";
-                                        sql += "`sftp_password` varchar(255) NOT NULL";
-                                        sql += ") ENGINE=MyISAM DEFAULT CHARSET=latin1";
-
+                                        
+                                        let sql = "CREATE TABLE IF NOT EXISTS `permissions_user` (";
+                                        sql += "`server_id` varchar(6) NOT NULL,";
+                                        sql += "`user_id` int(11) NOT NULL,";
+                                        sql += "`permissions_id` int(11) NOT NULL,";
+                                        sql += ") ENGINE=MyISAM DEFAULT CHARSET=latin1"
                                         connection.query(sql, function (err) {
                                             if (err) {
                                                 console.error(err);
                                                 fs.unlinkSync(path.join(__dirname, 'config.json'));
                                                 process.exit(1);
                                             }
-
-                                            connection.query('DROP TABLE IF EXISTS `servers_users`', function (err) {
+                                            
+                                            connection.query('DROP TABLE IF EXISTS `users`', function (err) {
                                                 if (err) {
                                                     console.error(err);
                                                     fs.unlinkSync(path.join(__dirname, 'config.json'));
                                                     process.exit(1);
                                                 }
-
-                                                let sql = "CREATE TABLE IF NOT EXISTS `servers_users` (";
-                                                sql += "`server_id` varchar(6) NOT NULL,";
-                                                sql += "`user_id` int(11) NOT NULL,";
-                                                sql += "`permissions_id` int(11) NOT NULL,";
-                                                sql += ") ENGINE=MyISAM DEFAULT CHARSET=latin1";
-
+                                                
+                                                let sql = "CREATE TABLE IF NOT EXISTS `users` (";
+                                                sql += "`id` int(11) NOT NULL AUTO_INCREMENT,";
+                                                sql += "`username` varchar(255) NOT NULL,";
+                                                sql += "`email` varchar(255) NOT NULL,";
+                                                sql += "`password` varchar(255) NOT NULL,";
+                                                sql += "PRIMARY KEY (`id`)";
+                                                sql += ") ENGINE=MyISAM DEFAULT CHARSET=latin1"
                                                 connection.query(sql, function (err) {
                                                     if (err) {
                                                         console.error(err);
                                                         fs.unlinkSync(path.join(__dirname, 'config.json'));
                                                         process.exit(1);
                                                     }
-
-                                                    connection.query('DROP TABLE IF EXISTS `users`', function (err) {
+                                                    
+                                                    connection.query('DROP TABLE IF EXISTS `users_permissions`', async function (err) {
                                                         if (err) {
                                                             console.error(err);
                                                             fs.unlinkSync(path.join(__dirname, 'config.json'));
                                                             process.exit(1);
                                                         }
 
-                                                        let sql = "CREATE TABLE IF NOT EXISTS `users` (";
-                                                        sql += "`id` int(11) NOT NULL AUTO_INCREMENT,";
-                                                        sql += "`username` varchar(255) NOT NULL,";
-                                                        sql += "`email` varchar(255) NOT NULL,";
-                                                        sql += "`password` varchar(255) NOT NULL,";
-                                                        sql += "PRIMARY KEY (`id`)";
-                                                        sql += ") ENGINE=MyISAM DEFAULT CHARSET=latin1";
-
-                                                        connection.query(sql, function (err) {
-                                                            if (err) {
-                                                                console.error(err);
-                                                                fs.unlinkSync(path.join(__dirname, 'config.json'));
-                                                                process.exit(1);
-                                                            }
-
-                                                            connection.query('DROP TABLE IF EXISTS `users_permissions`', async function (err) {
-                                                                if (err) {
-                                                                    console.error(err);
-                                                                    fs.unlinkSync(path.join(__dirname, 'config.json'));
-                                                                    process.exit(1);
-                                                                }
-
-                                                                let sql = "CREATE TABLE IF NOT EXISTS `users_permissions` (";
-                                                                sql += "`user_id` int(11) NOT NULL,";
-                                                                sql += "`permissions_id` int(11) NOT NULL";
-                                                                sql += ") ENGINE=MyISAM DEFAULT CHARSET=latin1";
-
-                                                                console.log(colors.green('La base de données a été créée avec succès !'));
-                
-                                                                const confirm = await new Confirm({
-                                                                    name: 'confirm',
-                                                                    message: 'Voulez-vous créer un compte administrateur ?'
-                                                                }).run();
-                                                
-                                                                if (confirm) {
-                                                                    const username = await new Input({
-                                                                        name: 'username',
-                                                                        message: 'Entrez le nom d\'utilisateur de l\'administrateur'
-                                                                    }).run();
-                                                
-                                                                    const email = await new Input({
-                                                                        name: 'email',
-                                                                        message: 'Entrez l\'adresse email de l\'administrateur'
-                                                                    }).run();
-                                                
-                                                                    const password = await new Password({
-                                                                        name: 'password',
-                                                                        message: 'Entrez le mot de passe de l\'administrateur'
-                                                                    }).run();
-                                                
-                                                                    let sql = 'INSERT INTO users (username, email, password) VALUES (?, ?, ?)';
-                                                                    connection.query(sql, [username, email, crypto.createHash('md5').update(password).digest('hex')], function (err, result) {
-                                                                        if (err) throw err;
-                                                                        console.log(colors.green('Le compte administrateur a été créé avec succès !'));
-                                                
-                                                                        console.log(colors.green('Feather a été installé avec succès !'));
-                                                                        console.log(colors.yellow('Pour démarrer Feather, exécutez la commande suivante:'));
-                                                                        console.log(colors.yellow(`\t${colors.blue(prefix+'feather')} start`));
-                                                                        process.exit(0);
-                                                                    });
-                                                                } else {
-                                                                    console.log(colors.green('Feather a été installé avec succès !'));
-                                                                    console.log(colors.yellow('Pour démarrer Feather, exécutez la commande suivante:'));
-                                                                    console.log(colors.yellow(`\t${colors.blue(prefix+'feather')} start`));
-                                                                    process.exit(0);
-                                                                }
+                                                        let sql = "CREATE TABLE IF NOT EXISTS `users_permissions` (";
+                                                        sql += "`user_id` int(11) NOT NULL,";
+                                                        sql += "`permissions_id` int(11) NOT NULL";
+                                                        sql += ") ENGINE=MyISAM DEFAULT CHARSET=latin1"
+                                                        console.log(colors.green('La base de données a été créée avec succès !'));
+        
+                                                        const confirm = await new Confirm({
+                                                            name: 'confirm',
+                                                            message: 'Voulez-vous créer un compte administrateur ?'
+                                                        }).run();
+                                        
+                                                        if (confirm) {
+                                                            const username = await new Input({
+                                                                name: 'username',
+                                                                message: 'Entrez le nom d\'utilisateur de l\'administrateur'
+                                                            }).run();
+                                        
+                                                            const email = await new Input({
+                                                                name: 'email',
+                                                                message: 'Entrez l\'adresse email de l\'administrateur'
+                                                            }).run();
+                                        
+                                                            const password = await new Password({
+                                                                name: 'password',
+                                                                message: 'Entrez le mot de passe de l\'administrateur'
+                                                            }).run();
+                                        
+                                                            let sql = 'INSERT INTO users (username, email, password) VALUES (?, ?, ?)';
+                                                            connection.query(sql, [username, email, crypto.createHash('md5').update(password).digest('hex')], function (err, result) {
+                                                                if (err) throw err;
+                                                                console.log(colors.green('Le compte administrateur a été créé avec succès !'));
+                                        
+                                                                console.log(colors.green('Feather a été installé avec succès !'));
+                                                                console.log(colors.yellow('Pour démarrer Feather, exécutez la commande suivante:'));
+                                                                console.log(colors.yellow(`\t${colors.blue(prefix+'feather')} start`));
+                                                                process.exit(0);
                                                             });
-                                                        });
+                                                        } else {
+                                                            console.log(colors.green('Feather a été installé avec succès !'));
+                                                            console.log(colors.yellow('Pour démarrer Feather, exécutez la commande suivante:'));
+                                                            console.log(colors.yellow(`\t${colors.blue(prefix+'feather')} start`));
+                                                            process.exit(0);
+                                                        }
                                                     });
                                                 });
                                             });
@@ -596,7 +569,7 @@ if (dockerCheck.stdout.toString().includes('Server')) {
                                     process.exit(0);
                                 }
                 
-                                connection.query('INSERT INTO servers_users (server_id, user_id, permissions_id) VALUES (?, ?, 1)', [id, user.id], async function(err) {
+                                connection.query('INSERT INTO permissions_users (user_id, server_id, permissions_id) VALUES (?, ?, 1)', [user.id, id], async function(err) {
                                     if (err) {
                                         console.error(err);
                                         console.log(colors.red('Échec lors de la connexion à la base de données. Veuillez réessayer.'));
@@ -913,7 +886,7 @@ async function removeUser(connection, user) {
             process.exit(0);
         }
 
-        connection.query('DELETE FROM servers_users WHERE user_id = ?', [user.id], async function(err) {
+        connection.query('DELETE FROM permissions_user WHERE user_id = ?', [user.id], async function(err) {
             if (err) {
                 console.log(colors.red('Échec lors de la connexion à la base de données. Veuillez réessayer.'));
                 process.exit(0);
@@ -932,7 +905,7 @@ async function removeServer(connection, server) {
             process.exit(0);
         }
 
-        connection.query('DELETE FROM servers_users WHERE server_id = ?', [server.id], async function(err) {
+        connection.query('DELETE FROM permissions_user WHERE server_id = ?', [server.id], async function(err) {
             if (err) {
                 console.log(colors.red('Échec lors de la connexion à la base de données. Veuillez réessayer.'));
                 process.exit(0);
