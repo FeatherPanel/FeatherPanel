@@ -30,13 +30,62 @@ function isCmd() {
     }
 }
 
+let executablePath = (os.platform() === 'win32') ? 'C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe' : '/usr/bin/docker';
+if (os.platform() === 'darwin') executablePath = '/Applications/Docker.app/Contents/MacOS/Docker';
+if (fs.existsSync(path.join(__dirname, 'config.json')) && typeof JSON.parse(fs.readFileSync(path.join(__dirname, 'config.json'))).docker.executablePath !== 'undefined') {
+    executablePath = JSON.parse(fs.readFileSync(path.join(__dirname, 'config.json'))).docker.executablePath;
+}
+
 // check if docker is installed and running
-let dockerCheck = spawnSync('docker version', { shell: true, stdio: 'pipe' });
+let dockerCheck = spawnSync(`"${executablePath}" version`, { shell: true, stdio: 'pipe' });
 if (dockerCheck.stdout.toString().includes('Server')) {
     console.log(colors.green('Docker est installé et fonctionne correctement.'));
 } else {
-    console.log(colors.red('Docker n\'est pas installé ou n\'est pas lancé. Veuillez l\'installer et le lancer avant de continuer.'));
-    process.exit(1);
+    if (fs.existsSync(executablePath)) {
+        console.log(colors.red('Docker n\'est pas lancé. Veuillez le lancer avant de continuer.'));
+        process.exit(1);
+    } else {
+        console.log(colors.red('Docker n\'a pas été trouvé dans C:\\Program Files\\Docker\\Docker\\. Veuillez l\'installer avant de continuer.'));
+        const confirm = new Confirm({
+            name: 'confirm',
+            message: 'Docker est installé dans un autre répertoire ?'
+        });
+
+        confirm.run().then(answer => {
+            if (answer) {
+                const form = new Form({
+                    name: 'docker',
+                    message: 'Veuillez entrer le chemin d\'accès à docker.exe',
+                    choices: [
+                        {
+                            name: 'path',
+                            message: 'Chemin d\'accès',
+                            initial: 'C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe'
+                        }
+                    ]
+                });
+
+                form.run().then(answer => {
+                    if (fs.existsSync(answer.path)) {
+                        console.log(colors.green('Docker est installé et fonctionne correctement.'));
+                        fs.writeFileSync(path.join(__dirname, 'config.json'), JSON.stringify({
+                            docker: {
+                                executablePath: answer.path
+                            }
+                        }));
+
+                        process.exit(1);
+                    } else {
+                        console.log(colors.red('Docker n\'est pas installé ou n\'est pas lancé. Veuillez l\'installer et le lancer avant de continuer.'));
+                    }
+                }).catch(console.error);
+            } else {
+                console.log(colors.red('Docker n\'est pas installé ou n\'est pas lancé. Veuillez l\'installer et le lancer avant de continuer.'));
+            }
+        }).catch(console.error);
+
+        process.exit(1);
+    }
 }
 
 (async () => {
@@ -84,6 +133,15 @@ if (dockerCheck.stdout.toString().includes('Server')) {
                     { name: 'port', message: 'Port', initial: '3306' }
                   ]
             }).run();
+
+            let dockerExecutablePath = (os.platform() === 'win32') ? 'C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe' : '/usr/bin/docker';
+            if (os.platform() === 'darwin') executablePath = '/Applications/Docker.app/Contents/MacOS/Docker';
+
+            if (fs.existsSync(path.join(__dirname, 'config.json'))) {
+                if (fs.existsSync(path.join(__dirname, 'config.json')) && typeof JSON.parse(fs.readFileSync(path.join(__dirname, 'config.json'))).docker.executablePath !== 'undefined') {
+                    dockerExecutablePath = JSON.parse(fs.readFileSync(path.join(__dirname, 'config.json'))).docker.executablePath;
+                }
+            }
 
             let connection = mysql.createConnection(mysqlEntries);
             connection.connect(function(err) {
@@ -148,6 +206,9 @@ if (dockerCheck.stdout.toString().includes('Server')) {
                         }
                     },
                     mysql: mysqlEntries,
+                    docker: {
+                        executablePath: executablePath,
+                    },
                     version: "1.0.0"
                 }
     

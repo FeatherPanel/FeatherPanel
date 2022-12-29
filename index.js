@@ -147,7 +147,7 @@ app.post('/server/:id/start', function(req, res) {
                     return res.send({ error: { code: '500', title: 'Erreur interne du serveur', message: 'Échec lors de la connexion à la base de données. Veuillez réessayer.', details: `Si le problème persiste, envoyez un mail à ${conf.contact}.` } });
                 }
 
-                exec('docker start ' + server.container, function(err) {
+                exec(`"${conf.docker.executable_path}" start ${server.container}`, function(err) {
                     if (err) {
                         connection.query('UPDATE servers SET status = ? WHERE id = ?', ['stopped', server.id]);
                         return res.send({ error: { code: '500', title: 'Erreur interne du serveur', message: 'Échec lors du démarrage du serveur. Veuillez réessayer.', details: `Si le problème persiste, envoyez un mail à ${conf.contact}.` } });
@@ -236,7 +236,6 @@ try {
     }, app).listen(conf.port);
     console.log(colors.green(`${conf.title} a été démarré sur le port ${conf.port} en https !`));
 } catch (e) {
-    console.log(e);
     app.listen(conf.port);
     console.log(colors.green(`${conf.title} a été démarré sur le port ${conf.port} !`));
 }
