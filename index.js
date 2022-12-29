@@ -34,7 +34,7 @@ app.get('/', function(req, res) {
         return res.redirect('login');
     }
 
-    connection.query('SELECT * FROM servers RIGHT JOIN servers_users ON servers.id = servers_users.server_id WHERE user_id = ?', [req.session.user.id], function(err, servers) {
+    connection.query('SELECT * FROM servers RIGHT JOIN permissions_user ON servers.id = permissions_user.server_id WHERE user_id = ?', [req.session.user.id], function(err, servers) {
         if (err) {
             return res.render('error', { error: { code: '500', title: 'Erreur interne du serveur', message: 'Échec lors de la connexion à la base de données. Veuillez réessayer.', details: `Si le problème persiste, envoyez un mail à ${conf.contact}.` } });
         }
@@ -58,7 +58,7 @@ app.get('/server/:id', function(req, res) {
             return res.render('error', { error: { code: '404', title: 'Serveur introuvable', message: 'Ce serveur n\'existe pas.' } });
         }
         server = server[0];
-        connection.query('SELECT * FROM servers_users WHERE server_id = ? AND user_id = ?', [server.id, req.session.user.id], function(err, server_user) {
+        connection.query('SELECT * FROM permissions_user WHERE server_id = ? AND user_id = ?', [server.id, req.session.user.id], function(err, server_user) {
             if (err) {
                 return res.render('error', { error: { code: '500', title: 'Erreur interne du serveur', message: 'Échec lors de la connexion à la base de données. Veuillez réessayer.', details: `Si le problème persiste, envoyez un mail à ${conf.contact}.` } });
             }
@@ -84,7 +84,7 @@ app.get('/server/:id/terminal', function(req, res) {
             return res.render('error', { error: { code: '404', title: 'Serveur introuvable', message: 'Ce serveur n\'existe pas.' } });
         }
         server = server[0];
-        connection.query('SELECT * FROM servers_users WHERE server_id = ? AND user_id = ?', [server.id, req.session.user.id], function(err, server_user) {
+        connection.query('SELECT * FROM permissions_user WHERE server_id = ? AND user_id = ?', [server.id, req.session.user.id], function(err, server_user) {
             if (err) {
                 return res.render('error', { error: { code: '500', title: 'Erreur interne du serveur', message: 'Échec lors de la connexion à la base de données. Veuillez réessayer.', details: `Si le problème persiste, envoyez un mail à ${conf.contact}.` } });
             }
@@ -122,13 +122,11 @@ app.post('/server/:id/start', function(req, res) {
         server = server[0];
 
         connection.query('SELECT *\
-        FROM servers_users\
-        RIGHT JOIN permissions_user\
-        ON permissions_user.server_id = servers_users.server_id\
+        FROM permissions_user\
         RIGHT JOIN permissions\
         ON permissions.id = permissions_user.permissions_id\
-        WHERE servers_users.server_id = ?\
-        AND servers_users.user_id = ?\
+        WHERE permissions_user.server_id = 344834\
+        AND permissions_user.user_id = 1\
         ', [server.id, data.user.id], function(err, server_user) {
             if (err) {
                 return res.send({ error: { code: '500', title: 'Erreur interne du serveur', message: 'Échec lors de la connexion à la base de données. Veuillez réessayer.', details: `Si le problème persiste, envoyez un mail à ${conf.contact}.` } });
