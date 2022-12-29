@@ -48,7 +48,7 @@ module.exports.initSocket = () => {
                             return socket.emit('history', { error: 'Invalid token' });
                         }
 
-                        exec(`"${conf.docker.executable_path}" logs ${server.container}`, (error, stdout, stderr) => {
+                        exec(`"${conf.docker.executablePath}" logs ${server.container}`, (error, stdout, stderr) => {
                             if (error) {
                                 console.log(`error: ${error.message}`);
                                 return socket.emit('history', { error: 'Internal server error' });
@@ -89,7 +89,7 @@ module.exports.initSocket = () => {
                     }
                     server = server[0];
         
-                    exec(`"${conf.docker.executable_path}" inspect ${server.container}`, (error, stdout, stderr) => {
+                    exec(`"${conf.docker.executablePath}" inspect ${server.container}`, (error, stdout, stderr) => {
                         if (error) {
                             console.log(`error: ${error.message}`);
                             return socket.emit('info', { error: 'Internal server error' });
@@ -103,13 +103,13 @@ module.exports.initSocket = () => {
                         }
                         if (parsedOut.State.Status !== server.status)
                             connection.query('UPDATE servers SET status = ? WHERE id = ?', [parsedOut.State.Status, server.id]);
-                        exec(`"${conf.docker.executable_path}" stats ${server.container} --no-stream --format "{{ json . }}"`, (error, stdout, stderr) => {
+                        exec(`"${conf.docker.executablePath}" stats ${server.container} --no-stream --format "{{ json . }}"`, (error, stdout, stderr) => {
                             if (error) {
                                 console.log(`error: ${error.message}`);
                                 return socket.emit('info', { error: 'Internal server error' });
                             }
                             parsedOut.Stats = JSON.parse(stdout);
-                            exec(`"${conf.docker.executable_path}" ps --size -f "id=${server.container}" --format "{{ json . }}"`, (error, stdout, stderr) => {
+                            exec(`"${conf.docker.executablePath}" ps --size -f "id=${server.container}" --format "{{ json . }}"`, (error, stdout, stderr) => {
                                 if (error) {
                                     console.log(`error: ${error.message}`);
                                     return socket.emit('info', { error: 'Internal server error' });
