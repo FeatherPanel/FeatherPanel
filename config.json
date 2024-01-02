@@ -1,0 +1,17 @@
+{
+  "version": "1.0.0",
+  "app": {
+    "name": "FeatherPanel Demo",
+    "url": "http://127.0.0.1:8080",
+    "httpPort": 8080,
+    "httpsPort": 8443,
+    "ssl": false,
+    "lang": "fr",
+    "contact": "featherpanel@natoune.fr"
+  },
+  "userSettings": {
+    "enableRegistration": true,
+    "enablePasswordChange": true,
+    "enableAccountDetailsChange": true
+  }
+}

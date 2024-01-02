@@ -1,9 +1,0 @@
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans&display=swap');
-
-* {
-    font-family: 'IBM Plex Sans', cursive !important;
-}
-
-.cmd-prompt span span {
-    width: fit-content !important;
-}

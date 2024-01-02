@@ -1,0 +1,2 @@
+This directory contains types for non-typed modules:
+	- language-detect (https://github.com/blakeembrey/node-language-detect)
