@@ -111,7 +111,7 @@ export interface NodeTable {
 	name: string;
 	address: string;
 	daemonPort: number;
-	sftpPort: number;
+	sftpPort: ColumnTypeOf<number>;
 	ssl: boolean;
 	location: string;
 	createdAt: ColumnType<Date, string | undefined, never>;

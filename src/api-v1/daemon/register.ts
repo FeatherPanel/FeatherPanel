@@ -18,20 +18,20 @@ module.exports = {
 				});
 			}
 
-			const { name, address, port, sftpPort, location, ssl } = req.body;
+			const { name, address, daemonPort, sftpPort, location, ssl } =
+				req.body;
 
 			if (
 				!name ||
 				typeof name !== "string" ||
 				!address ||
 				typeof address !== "string" ||
-				!port ||
-				typeof port !== "string" ||
+				!daemonPort ||
+				typeof daemonPort !== "number" ||
 				!sftpPort ||
-				typeof sftpPort !== "string" ||
+				typeof sftpPort !== "number" ||
 				!location ||
 				typeof location !== "string" ||
-				!ssl ||
 				typeof ssl !== "boolean"
 			) {
 				return res.status(400).json({
@@ -61,8 +61,8 @@ module.exports = {
 				.values({
 					name,
 					address,
-					daemonPort: parseInt(port),
-					sftpPort: parseInt(sftpPort),
+					daemonPort,
+					sftpPort,
 					location,
 					ssl,
 				})

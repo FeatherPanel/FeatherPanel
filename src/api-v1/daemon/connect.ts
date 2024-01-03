@@ -18,10 +18,12 @@ module.exports = {
 				});
 			}
 
+			let { id, ssl, sftpPort } = req.body;
+
 			if (
-				!req.body ||
 				typeof req.body.id !== "number" ||
-				typeof req.body.ssl !== "boolean"
+				typeof req.body.ssl !== "boolean" ||
+				typeof req.body.sftpPort !== "number"
 			) {
 				console.log(req.body);
 				return res.status(400).json({
@@ -30,9 +32,6 @@ module.exports = {
 					error: "BAD_REQUEST",
 				});
 			}
-
-			let id = req.body.id;
-			let ssl = req.body.ssl;
 
 			let ip = req.socket.remoteAddress;
 
@@ -65,6 +64,7 @@ module.exports = {
 				.set({
 					address: ip,
 					ssl,
+					sftpPort,
 				})
 				.where("id", "=", id)
 				.executeTakeFirst()
