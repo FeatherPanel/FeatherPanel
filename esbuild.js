@@ -4,7 +4,7 @@ require('esbuild').build({
 	entryPoints: ["./src/**/*.ts"],
 	tsconfig: "./tsconfig.json",
 	format: "cjs",
-	outdir: "./dist",
+	outdir: "./dist/src",
 	minify: true,
 }).catch((e) => {
 	console.error(e);
