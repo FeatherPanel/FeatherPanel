@@ -9,7 +9,7 @@
     "test": "jest",
     "test:watch": "npm run test -- --watch",
     "clean": "rimraf dist/",
-    "copy-files": "copyfiles LICENSE.md package.json fp.bat fp dist/ && rimraf dist/config.json",
+    "copy-files": "copyfiles public/ LICENSE.md package.json fp.bat fp dist/ && rimraf dist/config.json",
     "build": "npm run clean && node esbuild.js && npm run copy-files",
     "db:create": "ts-node src/scripts/createDatabase.ts",
     "fp": "node src/scripts/fp.js",
