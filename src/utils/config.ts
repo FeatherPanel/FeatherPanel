@@ -355,7 +355,7 @@ export async function panelConfig() {
 			process.exit(1);
 		}
 
-		const db = initDatabase({
+		const db = initDatabase(false, {
 			type: dbType.toLowerCase(),
 			sqlitePath: sqlitePath,
 			host: dbHost,

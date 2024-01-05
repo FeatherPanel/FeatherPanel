@@ -3,6 +3,7 @@ import fs from "fs";
 import path from "path";
 
 import pkg from "../../package.json";
+import { initDatabase } from "../database";
 import { panelConfig } from "../utils/config";
 
 const FP_COMMAND = process.platform === "win32" ? "fp" : "./fp";
@@ -179,6 +180,7 @@ if (
 			break;
 
 		case "start":
+			initDatabase(true);
 			require("../index");
 			break;
 

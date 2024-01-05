@@ -9,6 +9,7 @@ import { Pool } from "pg";
 import { Database } from "./types";
 
 export function initDatabase(
+	throwError: boolean = false,
 	options?:
 		| {
 				type: "mysql" | "postgresql";
@@ -20,8 +21,7 @@ export function initDatabase(
 				connectionLimit: number;
 		  }
 		| { type: "sqlite"; path: string }
-		| any,
-	throwError: boolean = true
+		| any
 ) {
 	let dialect;
 
@@ -116,4 +116,4 @@ export function initDatabase(
 	});
 }
 
-export const db = initDatabase()!;
+export const db = initDatabase();
