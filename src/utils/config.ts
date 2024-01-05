@@ -7,6 +7,7 @@ import fs from "fs";
 import path from "path";
 
 import pkg from "../../package.json";
+import { initDatabase } from "../database";
 import { syncConfig } from "./syncConfig";
 
 const FP_COMMAND = process.platform === "win32" ? "fp" : "./fp";
@@ -354,7 +355,7 @@ export async function panelConfig() {
 			process.exit(1);
 		}
 
-		const db = (await import("../database")).initDatabase({
+		const db = initDatabase({
 			type: dbType.toLowerCase(),
 			sqlitePath: sqlitePath,
 			host: dbHost,
