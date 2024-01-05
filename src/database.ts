@@ -116,4 +116,4 @@ export function initDatabase(
 	});
 }
 
-export const db = initDatabase();
+export const db = initDatabase()!;
