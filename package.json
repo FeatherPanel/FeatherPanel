@@ -11,7 +11,7 @@
     "clean": "rimraf dist/",
     "copy-files": "copyfiles 'public/**/*' LICENSE.md package.json fp.bat fp dist/ && rimraf dist/config.json",
     "build": "npm run clean && node esbuild.js && npm run copy-files",
-    "db:create": "ts-node src/scripts/createDatabase.ts",
+    "db:create": "node src/scripts/createDatabase.js",
     "fp": "node src/scripts/fp.js",
     "fp:dev": "ts-node src/scripts/fp.ts"
   },
