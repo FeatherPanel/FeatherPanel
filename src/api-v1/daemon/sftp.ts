@@ -2,6 +2,7 @@ import "dotenv/config";
 
 import { compareSync } from "bcryptjs";
 import { Request, Response } from "express";
+import { sql } from "kysely";
 
 import { db } from "../../database";
 
@@ -41,7 +42,7 @@ module.exports = {
 			let server = await db
 				.selectFrom("server")
 				.select(["id", "ownerId", "containerId"])
-				.where("serverId", "ilike", serverId)
+				.where("serverId", "=", serverId.toUpperCase())
 				.executeTakeFirst()
 				.catch(() => null);
 
@@ -55,7 +56,7 @@ module.exports = {
 			let user = await db
 				.selectFrom("user")
 				.select(["id", "password"])
-				.where("name", "ilike", name)
+				.where(sql`LOWER(name) = ${name.toLowerCase()}`)
 				.executeTakeFirst()
 				.catch(() => null);
 

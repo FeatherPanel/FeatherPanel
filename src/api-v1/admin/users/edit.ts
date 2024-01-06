@@ -79,7 +79,7 @@ module.exports = {
 				} else if (typeof req.body.email === "string") {
 					let userExists = await db
 						.selectFrom("user")
-						.where("email", "ilike", req.body.email)
+						.where("email", "=", req.body.email.toLowerCase())
 						.execute()
 						.then((users) => users.length > 0)
 						.catch(() => false);

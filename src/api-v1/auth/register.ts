@@ -1,5 +1,6 @@
 import { hashSync } from "bcryptjs";
 import { Request, Response } from "express";
+import { sql } from "kysely";
 import nodemailer from "nodemailer";
 import Mail from "nodemailer/lib/mailer";
 
@@ -50,7 +51,7 @@ module.exports = {
 				error: "INVALID_EMAIL",
 			});
 
-		if (EMAIL_BLACKLIST.includes(email))
+		if (EMAIL_BLACKLIST.includes(email.split("@")[1].toLowerCase()))
 			return res.status(400).json({
 				status: "error",
 				message: "Forbidden email",
@@ -66,8 +67,7 @@ module.exports = {
 
 		let userNameExists = await db
 			.selectFrom("user")
-			// case insensitive
-			.where("name", "ilike", username)
+			.where(sql`LOWER(name) = ${username.toLowerCase()}`)
 			.execute()
 			.then((users) => users.length > 0)
 			.catch(() => false);
@@ -82,7 +82,7 @@ module.exports = {
 
 		let userEmailExists = await db
 			.selectFrom("user")
-			.where("email", "ilike", email)
+			.where("email", "=", email.toLowerCase())
 			.execute()
 			.then((users) => users.length > 0)
 			.catch(() => false);
@@ -99,7 +99,7 @@ module.exports = {
 			.insertInto("user")
 			.values({
 				name: username,
-				email: email,
+				email: email.toLowerCase(),
 				password: hashSync(password, 10),
 				lang: CONFIG.app.lang,
 				emailSentAt: new Date().toISOString(),

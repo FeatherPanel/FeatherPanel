@@ -385,7 +385,7 @@ export async function panelConfig() {
 			.values({
 				name: adminUsername,
 				password: hashSync(adminPassword, 10),
-				email: adminEmail,
+				email: adminEmail.toLowerCase(),
 				emailVerified: true,
 				lang: mainLanguage,
 				admin: true,

@@ -31,7 +31,7 @@ module.exports = {
 
 		let user = await db
 			.selectFrom("user")
-			.where("email", "ilike", email)
+			.where("email", "=", email.toLowerCase())
 			.select([
 				"id",
 				"name",

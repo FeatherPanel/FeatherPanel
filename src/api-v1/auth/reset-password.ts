@@ -95,7 +95,7 @@ module.exports = {
 			// Logged out user can reset password with email
 			let dbUser = await db
 				.selectFrom("user")
-				.where("email", "ilike", email)
+				.where("email", "=", email.toLowerCase())
 				.select([
 					"id",
 					"name",

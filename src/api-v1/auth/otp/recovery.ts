@@ -81,7 +81,7 @@ module.exports = {
 		let dbUser = await db
 			.selectFrom("user")
 			.selectAll()
-			.where("email", "ilike", email)
+			.where("email", "=", email.toLowerCase())
 			.executeTakeFirst()
 			.catch(() => null);
 
@@ -108,7 +108,7 @@ module.exports = {
 
 		let updateQuery = await db
 			.updateTable("user")
-			.where("email", "ilike", email)
+			.where("email", "=", email.toLowerCase())
 			.set({
 				otpEnabled: false,
 				otpRecovery: null,

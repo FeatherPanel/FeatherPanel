@@ -79,7 +79,7 @@ module.exports = {
 
 				let userEmailExists = await db
 					.selectFrom("user")
-					.where("email", "ilike", req.body.email)
+					.where("email", "=", req.body.email.toLowerCase())
 					.execute()
 					.then((users) => users.length > 0)
 					.catch(() => false);
@@ -95,7 +95,7 @@ module.exports = {
 					.insertInto("user")
 					.values({
 						name,
-						email,
+						email: email.toLowerCase(),
 						password: hashSync(password, 10),
 						lang: CONFIG.app.lang,
 						admin,

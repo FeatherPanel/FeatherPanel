@@ -27,7 +27,7 @@ module.exports = {
 		let user = await db
 			.selectFrom("user")
 			.selectAll()
-			.where("email", "ilike", email)
+			.where("email", "=", email.toLowerCase())
 			.executeTakeFirst();
 
 		if (user) {
