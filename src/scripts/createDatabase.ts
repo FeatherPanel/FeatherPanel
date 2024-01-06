@@ -7,7 +7,9 @@ import * as path from "path";
 
 import { db } from "../database";
 
-async function migrateToLatest() {
+(async () => {
+	console.log("Création de la base de données...".yellow);
+
 	const migrator = new Migrator({
 		db,
 		provider: new FileMigrationProvider({
@@ -45,8 +47,4 @@ async function migrateToLatest() {
 	}
 
 	await db.destroy();
-}
-
-console.log("Création de la base de données...".yellow);
-
-migrateToLatest();
+})();
