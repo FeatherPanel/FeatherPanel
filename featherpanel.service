@@ -1,0 +1,12 @@
+[Unit]
+Description=FeatherPanel service
+
+[Service]
+User=root
+WorkingDirectory=/opt/featherpanel
+ExecStart="/opt/featherpanel/fp start"
+ExecStop="/opt/featherpanel/fp stop"
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
