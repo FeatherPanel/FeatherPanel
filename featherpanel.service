@@ -2,11 +2,14 @@
 Description=FeatherPanel service
 
 [Service]
+Type=simple
 User=root
+Group=root
 WorkingDirectory=/opt/featherpanel
-ExecStart="/opt/featherpanel/fp start"
-ExecStop="/opt/featherpanel/fp stop"
+ExecStart=/usr/bin/sudo /opt/featherpanel/fp start
+ExecStop=/usr/bin/sudo /opt/featherpanel/fp stop
 Restart=always
 
 [Install]
 WantedBy=multi-user.target
+
