@@ -25,7 +25,6 @@ module.exports = {
 				typeof req.body.ssl !== "boolean" ||
 				typeof req.body.sftpPort !== "number"
 			) {
-				console.log(req.body);
 				return res.status(400).json({
 					status: "error",
 					message: "Missing parameters",
